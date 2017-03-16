@@ -1,4 +1,4 @@
-package com.athaydes
+package com.athaydes.samples
 
 import com.athaydes.kunion.Union
 
