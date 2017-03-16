@@ -41,6 +41,19 @@ sealed class Union
      */
     sealed class U2<out A, out B> : Union()
     {
+        companion object
+        {
+            /**
+             * Create a [Union.U2] using the provided value with the first type of the Union (A).
+             */
+            fun <A> ofA(a: A) = U2.U2_1(a)
+
+            /**
+             * Create a [Union.U2] using the provided value with the second type of the Union (B).
+             */
+            fun <B> ofB(b: B) = U2.U2_2(b)
+        }
+
         override fun rotate(): U2<B, A> = when (this)
         {
             is U2_1<A> -> U2_2(this.value)
@@ -48,6 +61,30 @@ sealed class Union
         }
 
         abstract override fun asU2(): U2<A, B>
+
+        /**
+         * Use one of the types of this [Union], returning the value of whatever operation ran.
+         */
+        fun <R> use(useA: (A) -> R, useB: (B) -> R): R
+        {
+            return when (this)
+            {
+                is U2_1<A> -> useA(this.value)
+                is U2_2<B> -> useB(this.value)
+            }
+        }
+
+        /**
+         * Map this [Union] to another Union using the provided transformations.
+         */
+        fun <C, D> map(mapA: (A) -> C, mapB: (B) -> D): U2<C, D>
+        {
+            return when (this)
+            {
+                is U2_1<A> -> U2.U2_1(mapA(this.value))
+                is U2_2<B> -> U2.U2_2(mapB(this.value))
+            }
+        }
 
         data class U2_1<out A>(override val value: A) : U2<A, Nothing>(), Instance<A>
         {

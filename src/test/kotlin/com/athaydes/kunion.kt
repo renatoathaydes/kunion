@@ -67,6 +67,34 @@ class KunionTestSuite
     }
 
     @Test
+    fun U2Use()
+    {
+        val a: Union.U2<Int, Float> = Union.U2.U2_1(43)
+        val result1 = a.use({ a -> "Got Int $a" }, { b -> "Got Float $b" })
+
+        assertThat(result1, equalTo("Got Int 43"))
+
+        val b: Union.U2<Int, Float> = Union.U2.U2_2(0.34F)
+        val result2 = b.use({ a -> "Got Int $a" }, { b -> "Got Float $b" })
+
+        assertThat(result2, equalTo("Got Float 0.34"))
+    }
+
+    @Test
+    fun U2Map()
+    {
+        val a: Union.U2<Int, Float> = Union.U2.U2_1(43)
+        val result1 = a.map({ a -> a - 1 }, { b -> "Got Float $b" })
+
+        assertThat<Union.U2<Int, String>>(result1, equalTo(Union.U2.U2_1(42)))
+
+        val b: Union.U2<Int, Float> = Union.U2.U2_2(0.34F)
+        val result2 = b.map({ a -> "Got Int $a" }, { b -> b + 0.1F })
+
+        assertThat<Union.U2<String, Float>>(result2, equalTo(Union.U2.U2_2(0.44F)))
+    }
+
+    @Test
     fun u3()
     {
 
