@@ -37,6 +37,19 @@ sealed class Union
     abstract fun asU2(): Union
 
     /**
+     * Get the instance of this Union, ie. a single-value wrapper.
+     */
+    abstract fun asInstance(): Instance<*>
+
+    override fun toString(): String = asInstance().value.toString()
+
+    override fun equals(other: Any?) =
+            if (other is Union) asInstance().value == other.asInstance().value
+            else asInstance().value == other
+
+    override fun hashCode() = asInstance().value?.hashCode() ?: 0
+
+    /**
      * Union of 2 types.
      */
     sealed class U2<out A, out B> : Union()
@@ -86,14 +99,16 @@ sealed class Union
             }
         }
 
-        data class U2_1<out A>(override val value: A) : U2<A, Nothing>(), Instance<A>
+        class U2_1<out A>(override val value: A) : U2<A, Nothing>(), Instance<A>
         {
             override fun asU2(): U2<A, Nothing> = this
+            override fun asInstance() = this
         }
 
-        data class U2_2<out B>(override val value: B) : U2<Nothing, B>(), Instance<B>
+        class U2_2<out B>(override val value: B) : U2<Nothing, B>(), Instance<B>
         {
             override fun asU2(): U2<Nothing, B> = this
+            override fun asInstance() = this
         }
     }
 
@@ -155,19 +170,22 @@ sealed class Union
             }
         }
 
-        data class U3_1<out A>(override val value: A) : U3<A, Nothing, Nothing>(), Instance<A>
+        class U3_1<out A>(override val value: A) : U3<A, Nothing, Nothing>(), Instance<A>
         {
             override fun asU2(): U2<A, Nothing> = U2.U2_1(value)
+            override fun asInstance() = this
         }
 
-        data class U3_2<out B>(override val value: B) : U3<Nothing, B, Nothing>(), Instance<B>
+        class U3_2<out B>(override val value: B) : U3<Nothing, B, Nothing>(), Instance<B>
         {
             override fun asU2(): U2<Nothing, U2<B, Nothing>> = U2.U2_2(U2.U2_1(value))
+            override fun asInstance() = this
         }
 
-        data class U3_3<out C>(override val value: C) : U3<Nothing, Nothing, C>(), Instance<C>
+        class U3_3<out C>(override val value: C) : U3<Nothing, Nothing, C>(), Instance<C>
         {
             override fun asU2(): U2<Nothing, U2<Nothing, C>> = U2.U2_2(U2.U2_2(value))
+            override fun asInstance() = this
         }
     }
 
@@ -237,24 +255,28 @@ sealed class Union
             }
         }
 
-        data class U4_1<out A>(override val value: A) : U4<A, Nothing, Nothing, Nothing>(), Instance<A>
+        class U4_1<out A>(override val value: A) : U4<A, Nothing, Nothing, Nothing>(), Instance<A>
         {
             override fun asU2(): U2<A, Nothing> = U2.U2_1(value)
+            override fun asInstance() = this
         }
 
-        data class U4_2<out B>(override val value: B) : U4<Nothing, B, Nothing, Nothing>(), Instance<B>
+        class U4_2<out B>(override val value: B) : U4<Nothing, B, Nothing, Nothing>(), Instance<B>
         {
             override fun asU2(): U2<Nothing, U3<B, Nothing, Nothing>> = U2.U2_2(U3.U3_1(value))
+            override fun asInstance() = this
         }
 
-        data class U4_3<out C>(override val value: C) : U4<Nothing, Nothing, C, Nothing>(), Instance<C>
+        class U4_3<out C>(override val value: C) : U4<Nothing, Nothing, C, Nothing>(), Instance<C>
         {
             override fun asU2(): U2<Nothing, U3<Nothing, C, Nothing>> = U2.U2_2(U3.U3_2(value))
+            override fun asInstance() = this
         }
 
-        data class U4_4<out D>(override val value: D) : U4<Nothing, Nothing, Nothing, D>(), Instance<D>
+        class U4_4<out D>(override val value: D) : U4<Nothing, Nothing, Nothing, D>(), Instance<D>
         {
             override fun asU2(): U2<Nothing, U3<Nothing, Nothing, D>> = U2.U2_2(U3.U3_3(value))
+            override fun asInstance() = this
         }
     }
 
