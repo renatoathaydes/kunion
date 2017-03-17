@@ -40,5 +40,7 @@ fun main(args: Array<String>)
         result.use(
                 { lines -> println("File $file has ${lines.size} lines.") },
                 { error -> println("An error has occurred: $error.") })
+
+        println("Result is success? " + (result.asInstance().value !is ErrorMessage))
     }
 }
