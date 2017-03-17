@@ -69,12 +69,12 @@ class KunionTestSuite
     @Test
     fun U2Use()
     {
-        val a: Union.U2<Int, Float> = Union.U2.U2_1(43)
+        val a: Union.U2<Int, Float> = Union.U2.ofA(43)
         val result1 = a.use({ a -> "Got Int $a" }, { b -> "Got Float $b" })
 
         assertThat(result1, equalTo("Got Int 43"))
 
-        val b: Union.U2<Int, Float> = Union.U2.U2_2(0.34F)
+        val b: Union.U2<Int, Float> = Union.U2.ofB(0.34F)
         val result2 = b.use({ a -> "Got Int $a" }, { b -> "Got Float $b" })
 
         assertThat(result2, equalTo("Got Float 0.34"))
@@ -153,6 +153,44 @@ class KunionTestSuite
     }
 
     @Test
+    fun U3Use()
+    {
+        val a: Union.U3<Int, Float, Boolean> = Union.U3.ofA(43)
+        val result1 = a.use({ a -> "Got Int $a" }, { b -> "Got Float $b" }, { c -> "Got Boolean $c" })
+
+        assertThat(result1, equalTo("Got Int 43"))
+
+        val b: Union.U3<Int, Float, Boolean> = Union.U3.ofB(0.34F)
+        val result2 = b.use({ a -> "Got Int $a" }, { b -> "Got Float $b" }, { c -> "Got Boolean $c" })
+
+        assertThat(result2, equalTo("Got Float 0.34"))
+
+        val c: Union.U3<Int, Float, Boolean> = Union.U3.ofC(true)
+        val result3 = c.use({ a -> "Got Int $a" }, { b -> "Got Float $b" }, { c -> "Got Boolean $c" })
+
+        assertThat(result3, equalTo("Got Boolean true"))
+    }
+
+    @Test
+    fun U3Map()
+    {
+        val a: Union.U3<Int, Float, Boolean> = Union.U3.U3_1(43)
+        val result1 = a.map({ a -> a - 1 }, { b -> "Got Float $b" }, { c -> if (c) 'c' else 'x' })
+
+        assertThat<Union.U3<Int, String, Char>>(result1, equalTo(Union.U3.U3_1(42)))
+
+        val b: Union.U3<Int, Float, Boolean> = Union.U3.U3_2(0.34F)
+        val result2 = b.map({ a -> "Got Int $a" }, { b -> b + 0.1F }, { c -> if (c) 'c' else 'x' })
+
+        assertThat<Union.U3<String, Float, Char>>(result2, equalTo(Union.U3.U3_2(0.44F)))
+
+        val c: Union.U3<Int, Float, Boolean> = Union.U3.U3_3(true)
+        val result3 = c.map({ a -> "Got Int $a" }, { b -> b + 0.1F }, { c -> if (c) 'c' else 'x' })
+
+        assertThat<Union.U3<String, Float, Char>>(result3, equalTo(Union.U3.U3_3('c')))
+    }
+
+    @Test
     fun u4()
     {
 
@@ -215,6 +253,70 @@ class KunionTestSuite
         val value4AsU2: Union.U2<String, Union.U3<Char, Int, Boolean>> = Union.U2.U2_2(Union.U3.U3_3(false))
 
         assertThat(value4.asU2(), equalTo(value4AsU2))
+    }
+
+    @Test
+    fun U4Use()
+    {
+        val a: Union.U4<Int, Float, Boolean, Char> = Union.U4.ofA(43)
+        val result1 = a.use(
+                { a -> "Got Int $a" }, { b -> "Got Float $b" },
+                { c -> "Got Boolean $c" }, { d -> "Got Char $d" })
+
+        assertThat(result1, equalTo("Got Int 43"))
+
+        val b: Union.U4<Int, Float, Boolean, Char> = Union.U4.ofB(0.34F)
+        val result2 = b.use(
+                { a -> "Got Int $a" }, { b -> "Got Float $b" },
+                { c -> "Got Boolean $c" }, { d -> "Got Char $d" })
+
+        assertThat(result2, equalTo("Got Float 0.34"))
+
+        val c: Union.U4<Int, Float, Boolean, Char> = Union.U4.ofC(true)
+        val result3 = c.use(
+                { a -> "Got Int $a" }, { b -> "Got Float $b" },
+                { c -> "Got Boolean $c" }, { d -> "Got Char $d" })
+
+        assertThat(result3, equalTo("Got Boolean true"))
+
+        val d: Union.U4<Int, Float, Boolean, Char> = Union.U4.ofD('x')
+        val result4 = d.use(
+                { a -> "Got Int $a" }, { b -> "Got Float $b" },
+                { c -> "Got Boolean $c" }, { d -> "Got Char $d" })
+
+        assertThat(result4, equalTo("Got Char x"))
+    }
+
+    @Test
+    fun U4Map()
+    {
+        val a: Union.U4<Int, Float, Boolean, Char> = Union.U4.U4_1(43)
+        val result1 = a.map(
+                { a -> a - 1 }, { b -> "Got Float $b" },
+                { c -> if (c) 'c' else 'x' }, { d -> d == 'z' })
+
+        assertThat<Union.U4<Int, String, Char, Boolean>>(result1, equalTo(Union.U4.U4_1(42)))
+
+        val b: Union.U4<Int, Float, Boolean, Char> = Union.U4.U4_2(0.34F)
+        val result2 = b.map(
+                { a -> "Got Int $a" }, { b -> b + 0.1F },
+                { c -> if (c) 'c' else 'x' }, { d -> d == 'z' })
+
+        assertThat<Union.U4<String, Float, Char, Boolean>>(result2, equalTo(Union.U4.U4_2(0.44F)))
+
+        val c: Union.U4<Int, Float, Boolean, Char> = Union.U4.U4_3(true)
+        val result3 = c.map(
+                { a -> "Got Int $a" }, { b -> b + 0.1F },
+                { c -> if (c) 'c' else 'x' }, { d -> d == 'z' })
+
+        assertThat<Union.U4<String, Float, Char, Boolean>>(result3, equalTo(Union.U4.U4_3('c')))
+
+        val d: Union.U4<Int, Float, Boolean, Char> = Union.U4.U4_4('m')
+        val result4 = d.map(
+                { a -> "Got Int $a" }, { b -> b + 0.1F },
+                { c -> if (c) 'c' else 'x' }, { d -> d == 'z' })
+
+        assertThat<Union.U4<String, Float, Char, Boolean>>(result4, equalTo(Union.U4.U4_4(false)))
     }
 
 }

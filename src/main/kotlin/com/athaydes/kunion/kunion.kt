@@ -102,6 +102,24 @@ sealed class Union
      */
     sealed class U3<out A, out B, out C> : Union()
     {
+        companion object
+        {
+            /**
+             * Create a [Union.U3] using the provided value with the first type of the Union (A).
+             */
+            fun <A> ofA(a: A) = U3.U3_1(a)
+
+            /**
+             * Create a [Union.U3] using the provided value with the second type of the Union (B).
+             */
+            fun <B> ofB(b: B) = U3.U3_2(b)
+
+            /**
+             * Create a [Union.U3] using the provided value with the third type of the Union (C).
+             */
+            fun <C> ofC(c: C) = U3.U3_3(c)
+        }
+
         override fun rotate(): U3<C, A, B> = when (this)
         {
             is U3_1<A> -> U3_2(this.value)
@@ -110,6 +128,32 @@ sealed class Union
         }
 
         abstract override fun asU2(): U2<A, U2<B, C>>
+
+        /**
+         * Use one of the types of this [Union], returning the value of whatever operation ran.
+         */
+        fun <R> use(useA: (A) -> R, useB: (B) -> R, useC: (C) -> R): R
+        {
+            return when (this)
+            {
+                is U3.U3_1<A> -> useA(this.value)
+                is U3.U3_2<B> -> useB(this.value)
+                is U3.U3_3<C> -> useC(this.value)
+            }
+        }
+
+        /**
+         * Map this [Union] to another Union using the provided transformations.
+         */
+        fun <D, E, F> map(mapA: (A) -> D, mapB: (B) -> E, mapC: (C) -> F): U3<D, E, F>
+        {
+            return when (this)
+            {
+                is U3.U3_1<A> -> U3.U3_1(mapA(this.value))
+                is U3.U3_2<B> -> U3.U3_2(mapB(this.value))
+                is U3.U3_3<C> -> U3.U3_3(mapC(this.value))
+            }
+        }
 
         data class U3_1<out A>(override val value: A) : U3<A, Nothing, Nothing>(), Instance<A>
         {
@@ -132,6 +176,29 @@ sealed class Union
      */
     sealed class U4<out A, out B, out C, out D> : Union()
     {
+        companion object
+        {
+            /**
+             * Create a [Union.U4] using the provided value with the first type of the Union (A).
+             */
+            fun <A> ofA(a: A) = U4.U4_1(a)
+
+            /**
+             * Create a [Union.U4] using the provided value with the second type of the Union (B).
+             */
+            fun <B> ofB(b: B) = U4.U4_2(b)
+
+            /**
+             * Create a [Union.U4] using the provided value with the third type of the Union (C).
+             */
+            fun <C> ofC(c: C) = U4.U4_3(c)
+
+            /**
+             * Create a [Union.U4] using the provided value with the fourth type of the Union (D).
+             */
+            fun <D> ofD(d: D) = U4.U4_4(d)
+        }
+
         override fun rotate(): U4<D, A, B, C> = when (this)
         {
             is U4_1<A> -> U4_2(this.value)
@@ -141,6 +208,34 @@ sealed class Union
         }
 
         abstract override fun asU2(): U2<A, U3<B, C, D>>
+
+        /**
+         * Use one of the types of this [Union], returning the value of whatever operation ran.
+         */
+        fun <R> use(useA: (A) -> R, useB: (B) -> R, useC: (C) -> R, useD: (D) -> R): R
+        {
+            return when (this)
+            {
+                is U4.U4_1<A> -> useA(this.value)
+                is U4.U4_2<B> -> useB(this.value)
+                is U4.U4_3<C> -> useC(this.value)
+                is U4.U4_4<D> -> useD(this.value)
+            }
+        }
+
+        /**
+         * Map this [Union] to another Union using the provided transformations.
+         */
+        fun <E, F, G, H> map(mapA: (A) -> E, mapB: (B) -> F, mapC: (C) -> G, mapD: (D) -> H): U4<E, F, G, H>
+        {
+            return when (this)
+            {
+                is U4.U4_1<A> -> U4.U4_1(mapA(this.value))
+                is U4.U4_2<B> -> U4.U4_2(mapB(this.value))
+                is U4.U4_3<C> -> U4.U4_3(mapC(this.value))
+                is U4.U4_4<D> -> U4.U4_4(mapD(this.value))
+            }
+        }
 
         data class U4_1<out A>(override val value: A) : U4<A, Nothing, Nothing, Nothing>(), Instance<A>
         {
