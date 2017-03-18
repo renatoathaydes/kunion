@@ -19,7 +19,7 @@ enum class Symbol
 
 typealias Rank = Union.U2<Int, Symbol>
 
-fun rank(number: Int): Rank = Union.U2.ofA(number)
+fun rank(number: Int): Rank? = if (number in 1..10) Union.U2.ofA(number) else null
 
 fun rank(symbol: Symbol): Rank = Union.U2.ofB(symbol)
 
@@ -60,7 +60,7 @@ data class Card(val rank: Rank, val suit: Suit) : Comparable<Card>
 
 fun main(args: Array<String>)
 {
-    val ranks = (1..10).map(::rank) +
+    val ranks = (1..10).map(::rank).filterNotNull() +
             listOf(Symbol.Ace, Symbol.Jack, Symbol.Queen, Symbol.King).map(::rank)
 
     val suites = listOf(Suit.Clubs, Suit.Hearts, Suit.Diamonds, Suit.Spades)
