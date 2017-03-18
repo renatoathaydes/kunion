@@ -67,11 +67,16 @@ fun main(args: Array<String>)
 
     val cards = ranks.flatMap { r -> suites.map { s -> Card(r, s) } }.toMutableList()
 
-    println("Sorted cards:")
+    println("All cards:")
     println(cards)
 
     Collections.shuffle(cards)
 
     println("Shuffled cards:")
+    println(cards)
+
+    cards.sort()
+
+    println("Sorted cards:")
     println(cards)
 }
