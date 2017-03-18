@@ -26,7 +26,15 @@ class User
 class Device
 class Organization
 
-fun getResourceById(id: String): Union.U3<User, Device, Organization>
+fun getResourceById(id: String): Union.U3<User, Device, Organization>?
+{
+    // TODO call a data source
+    return Union.U3.ofA(User())
+}
+
+typealias Resource = Union.U3<User, Device, Organization>
+
+fun getResourceById2(id: String): Resource?
 {
     // TODO call a data source
     return Union.U3.ofA(User())
@@ -45,13 +53,13 @@ class ReadmeSamples
     fun readmeSamples()
     {
         // inferred types
-        getResourceById("name = 'joe'").use(
+        getResourceById("name = 'joe'")?.use(
                 { user -> println("Got a user") },
                 { device -> println("It is a device") },
                 { org -> println("Org returned") })
 
         // explicit types
-        getResourceById("name = 'joe'").use(
+        getResourceById("name = 'joe'")?.use(
                 { user: User -> println("Got a user") },
                 { device: Device -> println("It is a device") },
                 { org: Organization -> println("Org returned") })

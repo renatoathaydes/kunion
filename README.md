@@ -11,7 +11,7 @@ For example, suppose you have a data source holding resources of three different
 using `Union.U3` (a union between 3 types):
 
 ```kotlin
-fun getResourceById(id: String): Union.U3<User, Device, Organization>
+fun getResourceById(id: String): Union.U3<User, Device, Organization>?
 {
     // TODO call a data source
     return Union.U3.ofA(User())
@@ -22,7 +22,7 @@ To read the result of this function, you use the `use` method, which lets you sp
 resource that might be returned:
 
 ```kotlin
-getResourceById("name = 'joe'").use(
+getResourceById("name = 'joe'")?.use(
         { user -> println("Got a user") },
         { device -> println("It is a device") },
         { org -> println("Org returned") })
@@ -32,7 +32,7 @@ Even though Kotlin infers the correct types for the argument of each lambda, you
 (just to prove that the types are correct):
 
 ```kotlin
-getResourceById("name = 'joe'").use(
+getResourceById("name = 'joe'")?.use(
         { user: User -> println("Got a user") },
         { device: Device -> println("It is a device") },
         { org: Organization -> println("Org returned") })
@@ -40,7 +40,20 @@ getResourceById("name = 'joe'").use(
 
 Normally, you define a `typealias` to avoid having to deal with `Union` types directly.
 
-For example, you can define the `Either` type like this:
+For example, you could define a `Resource` type alias in the above example:
+
+```kotlin
+typealias Resource = Union.U3<User, Device, Organization>
+
+fun getResourceById2(id: String): Resource?
+{
+    // TODO call a data source
+    return Union.U3.ofA(User())
+}
+```
+
+Union types are often used as less general constructs such as the `Either` type, which can be defined as a
+type union like this:
 
 ```kotlin
 typealias Either<A, B> = Union.U2<A, B>
@@ -101,7 +114,7 @@ sealed class Result<out B>
 }
 ```
 
-The problem that `KUnion` solves is, basically, to make it easier to define this kind of types in Kotlin:
+The problem that `KUnion` solves is, basically, it makes it easier to define this kind of types in Kotlin:
 
 ```kotlin
 typealias Result<B> = Union.U2<Throwable, B>
