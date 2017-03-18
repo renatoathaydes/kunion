@@ -125,7 +125,8 @@ as you'll see in the next sections.
 
 ## Usage
 
-`KUnion` offers unions of 2, 3 and 4 types, called respectively, `Union.U2`, Union.U3` and Union.U4`.
+`KUnion` offers unions of 2, 3 and 4 types, called respectively, `Union.U2`, `Union.U3` and `Union.U4`
+(you can have more types in a `Union` by combining these, of course).
 
 Each generic type of a `Union` is referred to as `A`, `B`, `C` and `D`, in this order. So, to create a `Union.U2` whose
 second type is `String`, you can do:
@@ -151,7 +152,10 @@ having both method overloading and return types with overloading allows for the 
 `Union` types can be very useful, but Kotlin already offers a few alternatives, so knowing when to use them is
 important.
 
-Below, we discuss when to use use and when not to use union types:
+> null values are generally not welcome inside a `Union`.
+  Make the `Union?` itself nullable if `null` is expected.
+
+Below, we discuss when to use and when NOT to use union types:
 
 #### When to use union types
 
