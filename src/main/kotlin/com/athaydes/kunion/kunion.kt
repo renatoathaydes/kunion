@@ -41,7 +41,7 @@ sealed class Union
      */
     abstract fun asInstance(): Instance<*>
 
-    override fun toString(): String = asInstance().value.toString()
+    override fun toString(): String = asInstance().value?.toString() ?: "<null>"
 
     override fun equals(other: Any?) =
             if (other is Union) asInstance().value == other.asInstance().value
