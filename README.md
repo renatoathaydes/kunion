@@ -205,7 +205,7 @@ val y: Union.U3<Double, Int, Float> = x.rotate()
 val z: Union.U3<Float, Double, Int> = y.rotate()
 ```
 
-### `fun asU2(): U2<A, B | U2<B, C> | U3<B, C, D>>`
+### `fun asU2(): U2<A, B> | U2<B, C> | U3<B, C, D>>`
 
 Converts any `Union` to a `Union.U2`.
 
