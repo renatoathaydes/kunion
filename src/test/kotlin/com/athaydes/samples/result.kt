@@ -3,12 +3,10 @@ package com.athaydes.samples
 import com.athaydes.kunion.Union
 import java.io.File
 
-typealias ErrorMessage = String
-
 /**
- * Result of a computation.
+ * Result of a computation that may fail.
  */
-typealias Result<V> = Union.U2<V, ErrorMessage>
+typealias Result<B> = Union.U2<Throwable, B>
 
 fun readFileLines(path: String): Result<List<String>>
 {
@@ -17,11 +15,11 @@ fun readFileLines(path: String): Result<List<String>>
     // turn a try/catch-based function into a union-type-based one
     return try
     {
-        Result.ofA(file.readLines())
+        Result.ofB(file.readLines())
     }
     catch (e: Exception)
     {
-        Result.ofB(e.message ?: e.toString())
+        Result.ofA(e)
     }
 }
 
@@ -38,9 +36,9 @@ fun main(args: Array<String>)
         val result = readFileLines(file)
 
         result.use(
-                { lines -> println("File $file has ${lines.size} lines.") },
-                { error -> println("An error has occurred: $error.") })
+                { error -> println("An error has occurred: $error.") },
+                { lines -> println("File $file has ${lines.size} lines.") })
 
-        println("Result is success? " + (result.asInstance().value !is ErrorMessage))
+        println("Result is success? " + (result.asInstance().value !is Throwable))
     }
 }
