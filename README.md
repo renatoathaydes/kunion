@@ -114,14 +114,35 @@ sealed class Result<out B>
 }
 ```
 
-The problem that `KUnion` solves is, basically, it makes it easier to define this kind of types in Kotlin:
+The problem that `KUnion` solves is, basically, it makes it easier to define this kind of types in Kotlin using
+`typealias`:
 
 ```kotlin
 typealias Result<B> = Union.U2<Throwable, B>
 ```
 
+Or ad-hoc (ie. no need to create a named type for it):
+
+```kotlin
+fun Int.factorial(): Int =
+        if (this <= 1) 1
+        else this * (this - 1).factorial()
+
+fun describeFactorial(i: Int): Union.U2<Pair<Int, String>, Pair<Int, Int>> =
+        if (i > 8) Union.U2.ofA(i to "Too large")
+        else Union.U2.ofB(i to i.factorial())
+
+(0..10).map(::describeFactorial).forEach { u ->
+    u.use({ u -> println("Unfortunately, ${u.first}! is ${u.second}") },
+            { u -> println("${u.first}! = ${u.second}") })
+}
+```
+
 `KUnion` also adds a few useful operations to the `Union` types that makes it nicer to deal with their values,
 as you'll see in the next sections.
+
+If you need more motivation for the concept of union types (or sum types) in general, check
+[Chad Austin](https://chadaustin.me/2015/07/sum-types/)'s blog post on the topic!
 
 ## Usage
 

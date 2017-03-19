@@ -118,5 +118,20 @@ class ReadmeSamples
 
         val p: Union.U2<Int, Float> = Union.U2.ofA(10)
         val q: Union.U2<Double, Long> = p.map(Int::toDouble, Float::toLong)
+
+        // ad-hoc union example
+
+        fun Int.factorial(): Int =
+                if (this <= 1) 1
+                else this * (this - 1).factorial()
+
+        fun describeFactorial(i: Int): Union.U2<Pair<Int, String>, Pair<Int, Int>> =
+                if (i > 8) Union.U2.ofA(i to "Too large")
+                else Union.U2.ofB(i to i.factorial())
+
+        (0..10).map(::describeFactorial).forEach { u ->
+            u.use({ u -> println("Unfortunately, ${u.first}! is ${u.second}") },
+                    { u -> println("${u.first}! = ${u.second}") })
+        }
     }
 }
